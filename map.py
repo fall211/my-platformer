@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from sys import exit
+from global_ import Global
 
 class Map(pygame.sprite.Sprite):
     def __init__(self):
@@ -39,8 +40,7 @@ class PlayButton(pygame.sprite.Sprite):
         mouse_position = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed() == (1,0,0) and self.rect.collidepoint(mouse_position):
             print('clicked start game')
-            return True
-        return False
+            Global.state = 'game level'
 
 
     def update(self):
