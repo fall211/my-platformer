@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from settings import *
 from level import Level
+from button import *
 
 
 class Game:
@@ -19,6 +20,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+
 
             self.level.run()
 
