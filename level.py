@@ -4,6 +4,8 @@ from random import randint
 from player import Player
 from map import * #Map, StartLogo, PlayButton, ExitButton
 from button import *
+from camera import CameraGroup
+
 
 class Level:
     def __init__(self):
@@ -11,10 +13,14 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         self.game_sprites = pygame.sprite.Group()
-        self.game_sprites.add(Map(),Player())
+        self.game_sprites.add(Map())
         self.hidden_sprites = pygame.sprite.Group()
         self.menu_sprites = pygame.sprite.Group()
         self.menu_sprites.add(StartLogo())
+
+        self.camera_group = CameraGroup()
+        self.player = Player((600,325),self.camera_group)
+
 
     def run(self):
         #update/draw game
@@ -23,6 +29,11 @@ class Level:
         if Global.state == 'game level':
             self.game_sprites.draw(self.display_surface)
             self.game_sprites.update()
+
+            self.camera_group.update()
+            self.camera_group.custom_draw(self.player)
+
+
         elif Global.state == 'main menu':
             self.menu_sprites.draw(self.display_surface)
             self.menu_sprites.update()
