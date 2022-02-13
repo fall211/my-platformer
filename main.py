@@ -20,6 +20,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                if pygame.key.get_pressed()[pygame.K_BACKSPACE]:
+                    pygame.quit()
+                    exit()
 
 
             self.level.run()
