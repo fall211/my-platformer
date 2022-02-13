@@ -1,10 +1,11 @@
 import pygame
 from settings import *
-from random import randint
 from player import Player
-from map import * #Map, StartLogo, PlayButton, ExitButton
-from button import *
+from map import Map, StartLogo
+from button import Button
 from camera import CameraGroup
+from global_ import Global
+from enemy import Enemy
 
 
 class Level:
@@ -19,8 +20,8 @@ class Level:
         self.menu_sprites.add(StartLogo())
 
         self.camera_group = CameraGroup()
-        self.player = Player((600,325),self.camera_group)
-
+        self.player = Player((width/2,height/2),self.camera_group)
+        self.enemy = Enemy((100,100),self.camera_group,self.player)
 
     def run(self):
         #update/draw game
