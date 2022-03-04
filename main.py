@@ -2,8 +2,6 @@ import pygame
 from sys import exit
 from settings import *
 from level import Level
-from button import *
-
 
 class Game:
     def __init__(self):
