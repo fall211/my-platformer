@@ -1,5 +1,5 @@
 import pygame
 
 class Global:
-        state = 'main menu'
+        state = 'game level'
         mouseclick_event = pygame.MOUSEBUTTONDOWN

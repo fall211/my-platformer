@@ -24,7 +24,7 @@ class CameraGroup(pygame.sprite.Group):
 		self.ground_rect = self.ground_surf.get_rect(topleft = (0,0))
 
 		# zoom
-		self.zoom_scale = 1
+		self.zoom_scale = 0.75
 		self.internal_surf_size = (2500,2500)
 		self.internal_surf = pygame.Surface(self.internal_surf_size, pygame.SRCALPHA)
 		self.internal_rect = self.internal_surf.get_rect(center = (self.half_w,self.half_h))
@@ -60,7 +60,7 @@ class CameraGroup(pygame.sprite.Group):
 		self.internal_surf.blit(self.ground_surf,ground_offset)
 
 		# active elements
-		for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+		for sprite in self.sprites(): #sorted(self.sprites(),key = lambda sprite: sprite.rect.centery): y-sort camera
 			offset_pos = sprite.rect.topleft - self.offset + self.internal_offset
 			self.internal_surf.blit(sprite.image,offset_pos)
 

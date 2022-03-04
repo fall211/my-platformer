@@ -8,8 +8,8 @@ from button import *
 class Game:
     def __init__(self):
         pygame.init()
-        screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption('My Game')
+        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        pygame.display.set_caption('Platformer Game')
         self.clock = pygame.time.Clock()
 
         self.level = Level()
@@ -28,7 +28,7 @@ class Game:
             self.level.run()
 
             pygame.display.update() #update the screen when While True is on
-            self.clock.tick(fps)
+            self.clock.tick(FPS)
 
 
 
