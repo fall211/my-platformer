@@ -3,7 +3,7 @@ from settings import *
 from player import Player
 from map import StartLogo, Tile
 from button import Button
-from camera import CameraGroup
+from camera import *
 from global_ import Global
 from enemy import Enemy
 
@@ -21,9 +21,11 @@ class Level:
 
 		self.camera_group = CameraGroup() #anything in here will be drawn, nothing else!
 
-
 		self.level_setup(LEVEL_MAP)
 		self.spawn_initial_enemies(LEVEL_MAP)
+
+		Crosshair(self.camera_group)
+
 
 	def level_setup(self,levelmap):
 		self.level_map = levelmap
@@ -60,6 +62,11 @@ class Level:
 			if self.player.rect.colliderect(self.teleporter.rect):
 				self.change_level(LEVEL_MAP_2)
 
+	def attack_trigger(self):
+		if pygame.mouse.get_pressed() == (1,0,0) and Global.state == 'game level':
+			self.mouse_pos = pygame.mouse.get_pos()
+			self.attack = Attack(self.player.rect.center,self.mouse_pos,self.camera_group)
+
 	def run(self):
 		#update/draw game
 
@@ -69,7 +76,9 @@ class Level:
 
 			self.camera_group.update()
 			self.camera_group.custom_draw(self.player)
+			# self.camera_group.return_mouse_pos()
 			self.tp_check()
+			# self.attack_trigger()
 
 
 		elif Global.state == 'main menu':
@@ -85,3 +94,46 @@ class Level:
 			start_button = Button('placeholders/startbuttonPH.png',(600,575),Button.start_game)
 			start_button.when_clicked(Global.mouseclick_event)
 			self.display_surface.blit(start_button.image, start_button.rect)
+
+
+
+class Attack(pygame.sprite.Sprite):
+	def __init__(self,player_pos,mouse_pos,group):
+		super().__init__(group)
+		self.player_pos = player_pos
+		self.mouse_pos = mouse_pos
+
+		self.image = pygame.image.load('placeholders/projectilePH.png').convert_alpha()
+		self.rect = self.image.get_rect(center=self.player_pos)
+
+		self.projectile_direction = pygame.math.Vector2()
+		self.player_vec = pygame.math.Vector2(self.player_pos)
+		self.mouse_vec = pygame.math.Vector2(self.mouse_pos)
+		self.projectile_direction = (self.player_vec - self.mouse_vec).normalize()
+
+		self.duration = 60
+		self.projectile_speed = 10
+
+
+	def projectile_life_span(self):
+		if self.duration <= 0:
+			self.kill()
+
+	def update(self):
+		self.duration -= 1
+		self.projectile_life_span()
+		self.rect.center += -self.projectile_direction * self.projectile_speed
+
+
+class Crosshair(pygame.sprite.Sprite):
+	def __init__(self,group):
+		super().__init__(group)
+
+		self.image = pygame.image.load('placeholders/crosshairPH.png').convert_alpha()
+		self.rect = self.image.get_rect(center=(WIDTH/2, HEIGHT/2))
+
+	def update(self):
+		# self.mouse_pos = pygame.mouse.get_pos()
+		self.mouse_pos = CameraGroup().return_mouse_pos()
+		self.rect.center = self.mouse_pos
+		print(self.mouse_pos)

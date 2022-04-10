@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+from global_ import Global
 
 class CameraGroup(pygame.sprite.Group):
 	def __init__(self):
@@ -24,7 +25,7 @@ class CameraGroup(pygame.sprite.Group):
 		self.ground_rect = self.ground_surf.get_rect(topleft = (0,0))
 
 		# zoom
-		self.zoom_scale = 0.75
+		self.zoom_scale = 1
 		self.internal_surf_size = (2500,2500)
 		self.internal_surf = pygame.Surface(self.internal_surf_size, pygame.SRCALPHA)
 		self.internal_rect = self.internal_surf.get_rect(center = (self.half_w,self.half_h))
@@ -35,18 +36,27 @@ class CameraGroup(pygame.sprite.Group):
 
 
 	def box_target_camera(self,target):
+		self.target = target
 
-		if target.rect.left < self.camera_rect.left:
-			self.camera_rect.left = target.rect.left
-		if target.rect.right > self.camera_rect.right:
-			self.camera_rect.right = target.rect.right
-		if target.rect.top < self.camera_rect.top:
-			self.camera_rect.top = target.rect.top
-		if target.rect.bottom > self.camera_rect.bottom:
-			self.camera_rect.bottom = target.rect.bottom
+		if self.target.rect.left < self.camera_rect.left:
+			self.camera_rect.left = self.target.rect.left
+		if self.target.rect.right > self.camera_rect.right:
+			self.camera_rect.right = self.target.rect.right
+		if self.target.rect.top < self.camera_rect.top:
+			self.camera_rect.top = self.target.rect.top
+		if self.target.rect.bottom > self.camera_rect.bottom:
+			self.camera_rect.bottom = self.target.rect.bottom
 
 		self.offset.x = self.camera_rect.left - self.camera_borders['left']
 		self.offset.y = self.camera_rect.top - self.camera_borders['top']
+
+	def return_mouse_pos(self):
+		self.offx = + self.offset.x - self.internal_offset.x
+		self.offy = + self.offset.y - self.internal_offset.y
+		mouse_pos = (pygame.mouse.get_pos()[0] - self.offx, pygame.mouse.get_pos()[1] - self.offy)
+		print('offset x=', self.offx)
+		print('offset y=', self.offy)
+		return mouse_pos
 
 
 	def custom_draw(self,player):

@@ -4,7 +4,7 @@ FPS = 60
 
 LEVEL_MAP = [
 '                                                          ',
-'               E                                         X',
+'                                                         X',
 '           T                      XXX                 XXXX',
 '        XXXX           XX                    XXX      X  X',
 '    P                                                    X',
