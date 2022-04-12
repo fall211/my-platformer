@@ -3,7 +3,7 @@
 import arcade
 from arcadesettings import *
 
-
+#comment
 
 
 class PlatformerRPG(arcade.Window):
