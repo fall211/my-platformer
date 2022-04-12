@@ -26,7 +26,7 @@ class PlatformerRPG(arcade.Window):
         self.scene.add_sprite_list('MapSprites',use_spatial_hash=True)
 
 
-        for row_index,row in enumerate(TEST_MAP):
+        for row_index,row in enumerate(LEVEL_MAP):
             for col_index,col in enumerate(row):
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE
@@ -56,7 +56,7 @@ class PlatformerRPG(arcade.Window):
         # code to draw the screen goes here
 
     def on_key_press(self,key,modifiers):
-        if key == arcade.key.W:
+        if key == arcade.key.W or key == arcade.key.SPACE:
             if self.physicsengine.can_jump():
                 self.player.change_y = PLAYER_JUMP
                 self.physicsengine.increment_jump_counter()

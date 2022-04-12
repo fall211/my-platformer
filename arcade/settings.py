@@ -8,18 +8,20 @@ WINDOW_TITLE = 'fall\'s Epic Platformer'
 
 # map
 TILE_SIZE = 128
-TEST_MAP = [
-'    XXXXX  XXXXXX  XX  XXXXX    XXXXXXXX         XXXX  XXX',
-'     XXXX  XXXXXX  XX  XXXX        XXX    XX     XXXX    X',
-'        X  XXXX    XX  XXX          XX          XXXXX    X',
-'  XX    X  XXXX    XX  XX      XXXXXXX       XXXXXXXX    X',
-'  XXXX       XX                                          X',
-'XXXXXX         XX         XX          XXX             XXXX',
-'    P                                                    X',
-'        XXXX           XX                    XXX      X  X',
-'                                  XXX                 XXXX',
+LEVEL_MAP = [
+'                                                          ',
 '                                                         X',
-'                                                          '    ]
+'           T                      XXX                 XXXX',
+'        XXXX           XX                    XXX      X  X',
+'    P                                                    X',
+'XXXXXX         XX         XX          XXX             XXXX',
+'  XXXX       XX                                          X',
+'  XX    X  XXXX    XX  XX      XXXXXXX       XXXXXXXX    X',
+'        X  XXXX    XX  XXX          XX          XXXXX    X',
+'     XXXX  XXXXXX  XX  XXXX        XXX    XX     XXXX    X',
+'    XXXXX  XXXXXX  XX  XXXXX    XXXXXXXX         XXXX  XXX']
+
+LEVEL_MAP.reverse()
 
 # player
 PLAYER_SPEED = 10
