@@ -1,7 +1,7 @@
 
 
 
-# Constants
+# technical
 WIDTH = 1280
 HEIGHT = 720
 WINDOW_TITLE = 'Tuukka\'s Epic Platformer'
@@ -24,4 +24,7 @@ TEST_MAP = [
 # player
 PLAYER_SPEED = 10
 PLAYER_JUMP = 25
+
+
+# world
 GRAVITY = 1
