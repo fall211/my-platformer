@@ -9,7 +9,7 @@ from arcadesettings import *
 class PlatformerRPG(arcade.Window):
     def __init__(self):
 
-        # Call the parent class and set up the window
+        # call the parent class and set up the window
         super().__init__(WIDTH, HEIGHT, WINDOW_TITLE)
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
@@ -48,13 +48,12 @@ class PlatformerRPG(arcade.Window):
         self.camera = arcade.Camera(self.width, self.height)
 
     def on_draw(self):
-        """Render the screen."""
         self.clear()
 
         self.scene.draw()
         self.camera.use()
 
-        # Code to draw the screen goes here
+        # code to draw the screen goes here
 
     def on_key_press(self,key,modifiers):
         if key == arcade.key.W:
@@ -64,11 +63,11 @@ class PlatformerRPG(arcade.Window):
         elif key == arcade.key.D:
             self.player.change_x += PLAYER_SPEED
         elif key == arcade.key.A:
-            self.player.change_x += -PLAYER_SPEED
+            self.player.change_x -= PLAYER_SPEED
 
     def on_key_release(self,key,modifiers):
         if key == arcade.key.D:
-            self.player.change_x += -PLAYER_SPEED
+            self.player.change_x -= PLAYER_SPEED
         elif key == arcade.key.A:
             self.player.change_x += PLAYER_SPEED
 
@@ -76,12 +75,12 @@ class PlatformerRPG(arcade.Window):
         screen_center_x = self.player.center_x - (self.camera.viewport_width/2)
         screen_center_y = self.player.center_y - (self.camera.viewport_height/2)
 
-        # Don't let camera travel past 0
+        # restrict camera movements past certain coords
         # if screen_center_x < 0:
         #     screen_center_x = 0
         if screen_center_y < -200: screen_center_y = -200
+        
         player_centered = screen_center_x, screen_center_y
-
         self.camera.move_to(player_centered,0.1)
 
     def on_update(self, delta_time):
