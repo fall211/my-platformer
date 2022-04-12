@@ -44,6 +44,7 @@ class PlatformerRPG(arcade.Window):
         self.physicsengine = arcade.PhysicsEnginePlatformer(
             self.player, gravity_constant=GRAVITY, walls=self.scene['MapSprites']
         )
+        self.physicsengine.enable_multi_jump(5)
         self.camera = arcade.Camera(self.width, self.height)
 
     def on_draw(self):
@@ -59,22 +60,21 @@ class PlatformerRPG(arcade.Window):
         if key == arcade.key.W:
             if self.physicsengine.can_jump():
                 self.player.change_y = PLAYER_JUMP
+                self.physicsengine.increment_jump_counter()
         elif key == arcade.key.D:
-            self.player.change_x = PLAYER_SPEED
+            self.player.change_x += PLAYER_SPEED
         elif key == arcade.key.A:
-            self.player.change_x = -PLAYER_SPEED
+            self.player.change_x += -PLAYER_SPEED
 
     def on_key_release(self,key,modifiers):
         if key == arcade.key.D:
-            self.player.change_x = 0
+            self.player.change_x += -PLAYER_SPEED
         elif key == arcade.key.A:
-            self.player.change_x = 0
+            self.player.change_x += PLAYER_SPEED
 
     def center_camera_to_player(self):
-        screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
-        screen_center_y = self.player.center_y - (
-            self.camera.viewport_height / 2
-        )
+        screen_center_x = self.player.center_x - (self.camera.viewport_width/2)
+        screen_center_y = self.player.center_y - (self.camera.viewport_height/2)
 
         # Don't let camera travel past 0
         # if screen_center_x < 0:
@@ -82,7 +82,7 @@ class PlatformerRPG(arcade.Window):
         if screen_center_y < -200: screen_center_y = -200
         player_centered = screen_center_x, screen_center_y
 
-        self.camera.move_to(player_centered)
+        self.camera.move_to(player_centered,0.1)
 
     def on_update(self, delta_time):
         self.physicsengine.update()
