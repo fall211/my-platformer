@@ -3,7 +3,6 @@
 import arcade
 from settings import *
 
-#comment
 
 
 class PlatformerRPG(arcade.Window):
@@ -17,6 +16,7 @@ class PlatformerRPG(arcade.Window):
         self.player = None
         self.physicsengine = None
         self.camera = None
+        self.guicamera = None
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -28,8 +28,8 @@ class PlatformerRPG(arcade.Window):
 
         for row_index,row in enumerate(LEVEL_MAP):
             for col_index,col in enumerate(row):
-                x = col_index * TILE_SIZE
-                y = row_index * TILE_SIZE
+                x = col_index * TILE_SIZE + 64
+                y = row_index * TILE_SIZE + 64
                 if col == 'X':
                     stoneground = arcade.Sprite(':resources:images/tiles/stoneCenter.png')
                     stoneground.top = y
@@ -46,14 +46,21 @@ class PlatformerRPG(arcade.Window):
         )
         self.physicsengine.enable_multi_jump(5)
         self.camera = arcade.Camera(self.width, self.height)
+        self.guicamera = arcade.Camera(self.width, self.height)
 
     def on_draw(self):
         self.clear()
-
-        self.scene.draw()
+        
         self.camera.use()
+        # anything after here will be on the screen and moved with self.camera
+        self.scene.draw()
 
-        # code to draw the screen goes here
+
+        self.guicamera.use()
+        # anything after here will be on the GUI
+        arcade.draw_text('epic gui',20,660,arcade.color.ALABAMA_CRIMSON,40)
+
+
 
     def on_key_press(self,key,modifiers):
         if key == arcade.key.W or key == arcade.key.SPACE:
