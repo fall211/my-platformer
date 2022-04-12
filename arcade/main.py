@@ -1,7 +1,7 @@
 
 
 import arcade
-from arcadesettings import *
+from settings import *
 
 #comment
 

@@ -4,7 +4,7 @@
 # technical
 WIDTH = 1280
 HEIGHT = 720
-WINDOW_TITLE = 'Tuukka\'s Epic Platformer'
+WINDOW_TITLE = 'fall\'s Epic Platformer'
 
 # map
 TILE_SIZE = 128
