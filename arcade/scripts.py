@@ -1,5 +1,7 @@
 import arcade
 from settings import *
+from player import Player
+from math import atan2,degrees, sqrt
 
 def make_map(self,map):
     self.levelmap = map
@@ -13,7 +15,7 @@ def make_map(self,map):
                 floor.left = x
                 self.scene.add_sprite('Platforms',floor)
             if col == 'P':
-                self.player = arcade.Sprite('placeholders/playerPH.png')
+                self.player = Player('player','player', False)
                 self.player.top = y
                 self.player.left = x
                 self.scene.add_sprite('Player',self.player)
@@ -32,3 +34,16 @@ def center_camera_to_target(self,target):
     
     target_centered = screen_center_x, screen_center_y
     self.camera.move_to(target_centered,0.1)
+
+def rangedattack(self):
+    mousetoplayerangle = ((self.mousey-self.player.center_y), (self.mousex-self.player.center_x))
+    mousetoplayerradians = atan2(mousetoplayerangle[0],mousetoplayerangle[1])
+    self.projectile = arcade.Sprite('images/Request pack/Tiles/laserBlueHorizontal.png')
+    self.projectile.position = self.player.position
+    self.projectile.angle = degrees(mousetoplayerradians)
+    self.projectile.vectorx = (self.mousex-self.player.center_x) / sqrt(((self.mousey-self.player.center_y)**2 + (self.mousex-self.player.center_x)**2))
+    self.projectile.vectory = (self.mousey-self.player.center_y) / sqrt(((self.mousey-self.player.center_y)**2 + (self.mousex-self.player.center_x)**2))
+    self.projectile.lifespan = 120
+
+    self.scene.add_sprite('RangedAttack',self.projectile)
+    self.leftclicked = False

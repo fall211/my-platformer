@@ -3,6 +3,9 @@
 import arcade
 from settings import *
 from scripts import *
+from player import Player
+from entity import Entity
+from enemy import Enemy
 
 
 
@@ -14,6 +17,7 @@ class PlatformerRPG(arcade.Window):
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
         self.player = None
+        self.leftclicked = False
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -22,6 +26,7 @@ class PlatformerRPG(arcade.Window):
         self.scene.add_sprite_list('Player')
         self.scene.add_sprite_list('Platforms',use_spatial_hash=True)
         self.scene.add_sprite_list('Coins',use_spatial_hash=True)
+        self.scene.add_sprite_list('RangedAttack')
 
         self.playerexp = 0
         
@@ -65,9 +70,16 @@ class PlatformerRPG(arcade.Window):
         elif key == arcade.key.A:
             self.player.change_x += PLAYER_SPEED
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.mousex = x + self.camera.position[0]
+        self.mousey = y + self.camera.position[1]
+        if button == arcade.MOUSE_BUTTON_LEFT: 
+            self.leftclicked = True
+
     def on_update(self, delta_time):
         self.physicsengine.update()
         center_camera_to_target(self,self.player)
+        self.scene.update_animation(delta_time,['Player'])
 
         if self.player.center_y < -1000: self.setup()
 
@@ -75,6 +87,20 @@ class PlatformerRPG(arcade.Window):
         for item in self.pickuplist:
             item.remove_from_sprite_lists()
             self.playerexp += 1
+
+        if self.leftclicked == True:
+            rangedattack(self)
+
+        for laser in self.scene.get_sprite_list('RangedAttack'):
+            laser.center_x += laser.vectorx * RANGED_ATTACK_SPEED
+            laser.center_y += laser.vectory * RANGED_ATTACK_SPEED
+            laser.lifespan -= 1
+            if laser.lifespan == 0 or laser.collides_with_list(self.scene['Platforms']):
+                laser.remove_from_sprite_lists()
+
+
+
+
 
 def main():
     """Main function"""
