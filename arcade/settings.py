@@ -10,15 +10,15 @@ WINDOW_TITLE = 'fall\'s Epic Platformer'
 TILE_SIZE = 128
 LEVEL_MAP = [
 '                                                          ',
-'                                                         X',
-'           T                      XXX                 XXXX',
-'        XXXX           XX                    XXX      X  X',
+'                                    C                    X',
+'           C                      XXX                 XXXX',
+'        XXXX           XX                    XXX      XC X',
 '    P                                                    X',
 'XXXXXX         XX         XX          XXX             XXXX',
-'  XXXX       XX                                          X',
+' CXXXX       XX                                          X',
 '  XX    X  XXXX    XX  XX      XXXXXXX       XXXXXXXX    X',
-'        X  XXXX    XX  XXX          XX          XXXXX    X',
-'     XXXX  XXXXXX  XX  XXXX        XXX    XX     XXXX    X',
+'        X  XXXX    XX  XXX         CXX          XXXXX    X',
+'     XXXX  XXXXXX  XX  XXXX        XXX    XX     XXXX   CX',
 '    XXXXX  XXXXXX  XX  XXXXX    XXXXXXXX         XXXX  XXX']
 
 LEVEL_MAP.reverse()

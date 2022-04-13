@@ -17,13 +17,23 @@ class PlatformerRPG(arcade.Window):
         self.physicsengine = None
         self.camera = None
         self.guicamera = None
+        self.playerexp = None
+        # self.map = None
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
         
         self.scene = arcade.Scene()
         self.scene.add_sprite_list('Player')
-        self.scene.add_sprite_list('MapSprites',use_spatial_hash=True)
+        self.scene.add_sprite_list('Platforms',use_spatial_hash=True)
+        self.scene.add_sprite_list('Coins',use_spatial_hash=True)
+
+        self.playerexp = 0
+        
+        # mapname = ':resources:tiled_maps/map2_level_1.json'
+        # layeroptions = {'Platforms':{'use_spatial_hash':True,},}
+        # self.map = arcade.load_tilemap(mapname,1,layeroptions)
+        # self.scene = arcade.Scene.from_tilemap(self.map)
 
 
         for row_index,row in enumerate(LEVEL_MAP):
@@ -34,15 +44,20 @@ class PlatformerRPG(arcade.Window):
                     stoneground = arcade.Sprite(':resources:images/tiles/stoneCenter.png')
                     stoneground.top = y
                     stoneground.left = x
-                    self.scene.add_sprite('MapSprites',stoneground)
+                    self.scene.add_sprite('Platforms',stoneground)
                 if col == 'P':
                     self.player = arcade.Sprite('placeholders/playerPH.png')
                     self.player.top = y
                     self.player.left = x
                     self.scene.add_sprite('Player',self.player)
+                if col == 'C':
+                    gem = arcade.Sprite(':resources:images/items/gemYellow.png')
+                    gem.top = y - 64
+                    gem.left = x
+                    self.scene.add_sprite('Coins',gem)
 
         self.physicsengine = arcade.PhysicsEnginePlatformer(
-            self.player, gravity_constant=GRAVITY, walls=self.scene['MapSprites']
+            self.player, gravity_constant=GRAVITY, walls=self.scene['Platforms']
         )
         self.physicsengine.enable_multi_jump(5)
         self.camera = arcade.Camera(self.width, self.height)
@@ -58,7 +73,8 @@ class PlatformerRPG(arcade.Window):
 
         self.guicamera.use()
         # anything after here will be on the GUI
-        arcade.draw_text('epic gui',20,660,arcade.color.ALABAMA_CRIMSON,40)
+        self.guitext = f"Exp: {self.playerexp}"
+        arcade.draw_text(self.guitext,20,660,arcade.color.ROMAN_SILVER,40)
 
 
 
@@ -83,8 +99,6 @@ class PlatformerRPG(arcade.Window):
         screen_center_y = self.player.center_y - (self.camera.viewport_height/2)
 
         # restrict camera movements past certain coords
-        # if screen_center_x < 0:
-        #     screen_center_x = 0
         if screen_center_y < -200: screen_center_y = -200
         
         player_centered = screen_center_x, screen_center_y
@@ -96,6 +110,10 @@ class PlatformerRPG(arcade.Window):
 
         if self.player.center_y < -1000: self.setup()
 
+        self.pickuplist = arcade.check_for_collision_with_list(self.player,self.scene['Coins'])
+        for item in self.pickuplist:
+            item.remove_from_sprite_lists()
+            self.playerexp += 1
 
 def main():
     """Main function"""
