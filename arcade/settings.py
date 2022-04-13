@@ -26,6 +26,7 @@ LEVEL_MAP.reverse()
 # player
 PLAYER_SPEED = 10
 PLAYER_JUMP = 25
+RANGED_ATTACK_SPEED = 50
 
 
 # world
