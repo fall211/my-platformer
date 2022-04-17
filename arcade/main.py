@@ -18,22 +18,45 @@ class PlatformerRPG(arcade.Window):
 
         self.player = None
         self.leftclicked = False
+        self.tilemap = None
+        self.current_level = 1
+
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
-        
-        self.scene = arcade.Scene()
-        self.scene.add_sprite_list('Player')
-        self.scene.add_sprite_list('Platforms',use_spatial_hash=True)
-        self.scene.add_sprite_list('Coins',use_spatial_hash=True)
+
+
+
+        map_file = f"maps/map_{self.current_level}.tmj"
+        layer_options = {
+            "Ground": {
+                "use_spatial_hash": True,
+            },
+            "Items": {
+                "use_spatial_hash": True,
+            },
+            "Doors": {
+                "use_spatial_hash": True,
+            }
+        }
+
+        self.tile_map = arcade.load_tilemap(map_file,1,layer_options)
+
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
+        self.scene.add_sprite_list("Player")
         self.scene.add_sprite_list('RangedAttack')
 
+
         self.playerexp = 0
-        
-        make_map(self,LEVEL_MAP)
+        self.player = Player('player','player', False)
+        if self.current_level == 1: self.player.x,self.player.y = 830, 960
+        elif self.current_level == 2: self.player.x,self.player.y = 420, 970
+        self.player.position = (self.player.x,self.player.y)
+        self.scene.add_sprite('Player',self.player)
+
 
         self.physicsengine = arcade.PhysicsEnginePlatformer(
-            self.player, gravity_constant=GRAVITY, walls=self.scene['Platforms']
+            self.player, gravity_constant=GRAVITY, walls=self.scene['Ground']
         )
         self.physicsengine.enable_multi_jump(5)
         self.camera = arcade.Camera(self.width, self.height)
@@ -69,6 +92,11 @@ class PlatformerRPG(arcade.Window):
             self.player.change_x -= PLAYER_SPEED
         elif key == arcade.key.A:
             self.player.change_x += PLAYER_SPEED
+        
+        elif key == arcade.key.S and self.player.collides_with_list(self.scene['Doors']):
+            if self.current_level == 1: self.current_level = 2
+            else: self.current_level = 1
+            self.setup()
 
     def on_mouse_press(self, x, y, button, modifiers):
         self.mousex = x + self.camera.position[0]
@@ -83,10 +111,10 @@ class PlatformerRPG(arcade.Window):
 
         if self.player.center_y < -1000: self.setup()
 
-        self.pickuplist = arcade.check_for_collision_with_list(self.player,self.scene['Coins'])
-        for item in self.pickuplist:
-            item.remove_from_sprite_lists()
-            self.playerexp += 1
+        # self.pickuplist = arcade.check_for_collision_with_list(self.player,self.scene['Coins'])
+        # for item in self.pickuplist:
+        #     item.remove_from_sprite_lists()
+        #     self.playerexp += 1
 
         if self.leftclicked == True:
             rangedattack(self)
@@ -95,8 +123,10 @@ class PlatformerRPG(arcade.Window):
             laser.center_x += laser.vectorx * RANGED_ATTACK_SPEED
             laser.center_y += laser.vectory * RANGED_ATTACK_SPEED
             laser.lifespan -= 1
-            if laser.lifespan == 0 or laser.collides_with_list(self.scene['Platforms']):
+            if laser.lifespan == 0 or laser.collides_with_list(self.scene['Ground']):
                 laser.remove_from_sprite_lists()
+        
+        print(self.player.position)
 
 
 

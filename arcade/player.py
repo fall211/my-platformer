@@ -8,6 +8,9 @@ class Player(Entity):
 
         self.jump_anim_enabled = jump
 
+        self.x = 0
+        self.y = 0
+
     def update_animation(self, delta_time: float = 1/60):
         
         if self.jump_anim_enabled == True:

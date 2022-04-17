@@ -3,27 +3,6 @@ from settings import *
 from player import Player
 from math import atan2,degrees, sqrt
 
-def make_map(self,map):
-    self.levelmap = map
-    for row_index,row in enumerate(self.levelmap):
-        for col_index,col in enumerate(row):
-            x = col_index * TILE_SIZE + 64
-            y = row_index * TILE_SIZE + 64
-            if col == 'X':
-                floor = arcade.Sprite(':resources:images/tiles/stoneCenter.png')
-                floor.top = y
-                floor.left = x
-                self.scene.add_sprite('Platforms',floor)
-            if col == 'P':
-                self.player = Player('player','player', False)
-                self.player.top = y
-                self.player.left = x
-                self.scene.add_sprite('Player',self.player)
-            if col == 'C':
-                gem = arcade.Sprite(':resources:images/items/gemYellow.png')
-                gem.top = y - 64
-                gem.left = x
-                self.scene.add_sprite('Coins',gem)
 
 def center_camera_to_target(self,target):
     self.target = target
