@@ -17,7 +17,7 @@ def center_camera_to_target(self,target):
 def rangedattack(self):
     mousetoplayerangle = ((self.mousey-self.player.center_y), (self.mousex-self.player.center_x))
     mousetoplayerradians = atan2(mousetoplayerangle[0],mousetoplayerangle[1])
-    self.projectile = arcade.Sprite('images/Request pack/Tiles/laserBlueHorizontal.png')
+    self.projectile = arcade.Sprite('images/world tiles/laserBlueHorizontal.png')
     self.projectile.position = self.player.position
     self.projectile.angle = degrees(mousetoplayerradians)
     self.projectile.vectorx = (self.mousex-self.player.center_x) / sqrt(((self.mousey-self.player.center_y)**2 + (self.mousex-self.player.center_x)**2))
