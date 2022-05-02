@@ -7,9 +7,9 @@ from player import Player
 from entity import Entity
 from enemy import Enemy
 
-with open("arcade/playerdata.json", "r") as f:
-    player_data = json.load(f)
-
+with open("arcade/playerdata.json", "r") as import_data:
+    player_data = json.load(import_data)
+import_data.close()
 
 class PlatformerRPG(arcade.Window):
     def __init__(self):
@@ -53,6 +53,7 @@ class PlatformerRPG(arcade.Window):
 
         # Player
         self.player_exp = player_data["player_exp"]
+        self.player_level = player_data["player_level"]
         self.player = Player('player', 'player', False)
         self.player.position = (self.level_data["player_spawn_pos"])
         self.scene.add_sprite('Player' ,self.player)
@@ -89,6 +90,8 @@ class PlatformerRPG(arcade.Window):
             self.player.change_x += PLAYER_SPEED
         elif key == arcade.key.A:
             self.player.change_x -= PLAYER_SPEED
+        elif key == arcade.key.P:
+            save_game()
 
     def on_key_release(self,key,modifiers):
         if key == arcade.key.D:
@@ -129,13 +132,19 @@ class PlatformerRPG(arcade.Window):
 
 
 
+window = PlatformerRPG()
 
 def main():
     """Main function"""
-    window = PlatformerRPG()
     window.setup()
     arcade.run()
 
+def save_game():
+    player_data["player_exp"] = window.player_exp
+    player_data["player_level"] = window.player_level
+    with open("arcade/playerdata.json", "w") as write_data:
+        json.dump(player_data, write_data, indent=4)
+        write_data.close()
 
 if __name__ == "__main__":
     main()
