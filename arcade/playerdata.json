@@ -1,0 +1,12 @@
+{
+    "player_exp": 10,
+    "player_level": 1,
+    "items": [
+        {
+            "item_name": "Stick"
+        },
+        {
+            "item_name": "Sword"
+        }
+    ]
+}
