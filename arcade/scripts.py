@@ -1,4 +1,5 @@
 import arcade
+import json
 from settings import *
 from player import Player
 from math import atan2,degrees, sqrt
@@ -27,6 +28,3 @@ def ranged_attack(self):
     self.scene.add_sprite('RangedAttack',self.projectile)
     self.left_clicked = False
     self.player_exp += 1
-
-def save_game(self):
-    pass
