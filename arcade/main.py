@@ -1,6 +1,5 @@
-
-
 import arcade
+import json
 from settings import *
 from scripts import *
 from leveldata import *
@@ -8,6 +7,8 @@ from player import Player
 from entity import Entity
 from enemy import Enemy
 
+with open("arcade/playerdata.json", "r") as f:
+    player_data = json.load(f)
 
 
 class PlatformerRPG(arcade.Window):
@@ -21,6 +22,7 @@ class PlatformerRPG(arcade.Window):
         self.left_clicked = False
         self.tile_map = None
         self.current_level = 1
+
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -50,7 +52,7 @@ class PlatformerRPG(arcade.Window):
         elif self.current_level == 2: self.level_data = level_2
 
         # Player
-        self.player_exp = 0
+        self.player_exp = player_data["player_exp"]
         self.player = Player('player', 'player', False)
         self.player.position = (self.level_data["player_spawn_pos"])
         self.scene.add_sprite('Player' ,self.player)
@@ -114,7 +116,7 @@ class PlatformerRPG(arcade.Window):
 
 
         if self.left_clicked == True:
-            rangedattack(self)
+            ranged_attack(self)
 
         for laser in self.scene.get_sprite_list('RangedAttack'):
             laser.center_x += laser.vector_x * RANGED_ATTACK_SPEED
@@ -123,7 +125,6 @@ class PlatformerRPG(arcade.Window):
             if laser.lifespan == 0 or laser.collides_with_list(self.scene['Ground']):
                 laser.remove_from_sprite_lists()
         
-        print(self.player.position)
 
 
 
@@ -138,3 +139,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+# TODO: finish save_game(), write exp data to playerdata.json
