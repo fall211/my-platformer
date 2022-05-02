@@ -3,6 +3,7 @@
 import arcade
 from settings import *
 from scripts import *
+from leveldata import *
 from player import Player
 from entity import Entity
 from enemy import Enemy
@@ -17,10 +18,9 @@ class PlatformerRPG(arcade.Window):
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
         self.player = None
-        self.leftclicked = False
-        self.tilemap = None
+        self.left_clicked = False
+        self.tile_map = None
         self.current_level = 1
-
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -46,21 +46,22 @@ class PlatformerRPG(arcade.Window):
         self.scene.add_sprite_list("Player")
         self.scene.add_sprite_list('RangedAttack')
 
+        if self.current_level == 1: self.level_data = level_1
+        elif self.current_level == 2: self.level_data = level_2
 
-        self.playerexp = 0
-        self.player = Player('player','player', False)
-        if self.current_level == 1: self.player.x,self.player.y = 830, 960
-        elif self.current_level == 2: self.player.x,self.player.y = 420, 970
-        self.player.position = (self.player.x,self.player.y)
-        self.scene.add_sprite('Player',self.player)
+        # Player
+        self.player_exp = 0
+        self.player = Player('player', 'player', False)
+        self.player.position = (self.level_data["player_spawn_pos"])
+        self.scene.add_sprite('Player' ,self.player)
 
 
-        self.physicsengine = arcade.PhysicsEnginePlatformer(
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, gravity_constant=GRAVITY, walls=self.scene['Ground']
         )
-        self.physicsengine.enable_multi_jump(5)
+        self.physics_engine.enable_multi_jump(5)
         self.camera = arcade.Camera(self.width, self.height)
-        self.guicamera = arcade.Camera(self.width, self.height)
+        self.gui_camera = arcade.Camera(self.width, self.height)
 
     def on_draw(self):
         self.clear()
@@ -70,18 +71,18 @@ class PlatformerRPG(arcade.Window):
         self.scene.draw()
 
 
-        self.guicamera.use()
+        self.gui_camera.use()
         # anything after here will be on the GUI
-        self.guitext = f"Exp: {self.playerexp}"
-        arcade.draw_text(self.guitext,20,660,arcade.color.ROMAN_SILVER,40)
+        self.gui_text = f"Exp: {self.player_exp}"
+        arcade.draw_text(self.gui_text, 20, 660, arcade.color.ROMAN_SILVER, 40)
 
 
 
     def on_key_press(self,key,modifiers):
         if key == arcade.key.W or key == arcade.key.SPACE:
-            if self.physicsengine.can_jump():
+            if self.physics_engine.can_jump():
                 self.player.change_y = PLAYER_JUMP
-                self.physicsengine.increment_jump_counter()
+                self.physics_engine.increment_jump_counter()
         elif key == arcade.key.D:
             self.player.change_x += PLAYER_SPEED
         elif key == arcade.key.A:
@@ -99,29 +100,25 @@ class PlatformerRPG(arcade.Window):
             self.setup()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        self.mousex = x + self.camera.position[0]
-        self.mousey = y + self.camera.position[1]
+        self.mouse_x = x + self.camera.position[0]
+        self.mouse_y = y + self.camera.position[1]
         if button == arcade.MOUSE_BUTTON_LEFT: 
-            self.leftclicked = True
+            self.left_clicked = True
 
     def on_update(self, delta_time):
-        self.physicsengine.update()
+        self.physics_engine.update()
         center_camera_to_target(self,self.player)
         self.scene.update_animation(delta_time,['Player'])
 
         if self.player.center_y < -1000: self.setup()
 
-        # self.pickuplist = arcade.check_for_collision_with_list(self.player,self.scene['Coins'])
-        # for item in self.pickuplist:
-        #     item.remove_from_sprite_lists()
-        #     self.playerexp += 1
 
-        if self.leftclicked == True:
+        if self.left_clicked == True:
             rangedattack(self)
 
         for laser in self.scene.get_sprite_list('RangedAttack'):
-            laser.center_x += laser.vectorx * RANGED_ATTACK_SPEED
-            laser.center_y += laser.vectory * RANGED_ATTACK_SPEED
+            laser.center_x += laser.vector_x * RANGED_ATTACK_SPEED
+            laser.center_y += laser.vector_y * RANGED_ATTACK_SPEED
             laser.lifespan -= 1
             if laser.lifespan == 0 or laser.collides_with_list(self.scene['Ground']):
                 laser.remove_from_sprite_lists()
