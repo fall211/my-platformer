@@ -14,7 +14,7 @@ def center_camera_to_target(self,target):
     target_centered = screen_center_x, screen_center_y
     self.camera.move_to(target_centered,0.1)
 
-def rangedattack(self):
+def ranged_attack(self):
     mouse_to_player_angle = ((self.mouse_y-self.player.center_y), (self.mouse_x-self.player.center_x))
     mouse_to_player_radians = atan2(mouse_to_player_angle[0],mouse_to_player_angle[1])
     self.projectile = arcade.Sprite('images/world tiles/laserBlueHorizontal.png')
@@ -26,3 +26,7 @@ def rangedattack(self):
 
     self.scene.add_sprite('RangedAttack',self.projectile)
     self.left_clicked = False
+    self.player_exp += 1
+
+def save_game(self):
+    pass
