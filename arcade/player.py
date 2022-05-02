@@ -3,8 +3,8 @@ from entity import Entity
 from settings import *
 
 class Player(Entity):
-    def __init__(self, imagefolder, imagename, jump):
-        super().__init__(imagefolder,imagename, jump)
+    def __init__(self, image_folder, image_name, jump):
+        super().__init__(image_folder,image_name, jump)
 
         self.jump_anim_enabled = jump
 
@@ -15,11 +15,11 @@ class Player(Entity):
         
         if self.jump_anim_enabled == True:
             if self.change_y != 0:
-                self.texture = self.jumptextures[int(self.currentexture)]
+                self.texture = self.jump_textures[int(self.current_texture)]
         
         if self.change_y == 0:
-            self.texture = self.idletextures[int(self.currentexture)]
+            self.texture = self.idle_textures[int(self.current_texture)]
 
-        if self.currentexture < 7:
-            self.currentexture +=0.2
-        else: self.currentexture = 0
+        if self.current_texture < 7:
+            self.current_texture +=0.2
+        else: self.current_texture = 0
