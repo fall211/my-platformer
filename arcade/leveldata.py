@@ -3,9 +3,9 @@
 
 
 level_1 = {
-    "player_spawn_pos": (830,960),
+    'player_spawn_pos': (830,960),
 }
 
 level_2 = {
-    "player_spawn_pos": (420,970)
+    'player_spawn_pos': (420,970)
 }
