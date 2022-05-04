@@ -2,8 +2,10 @@ import arcade
 import json
 from settings import *
 from player import Player
-from math import atan2,degrees, sqrt
+from enemy import Enemy
 
+from math import atan2,degrees, sqrt
+from random import choice
 
 def center_camera_to_target(self,target):
     self.target = target
@@ -27,4 +29,12 @@ def ranged_attack(self):
 
     self.scene.add_sprite('RangedAttack',self.projectile)
     self.left_clicked = False
-    self.player_exp += 1
+
+def spawn_enemy(self, pos_list):
+
+    self.spawn_locations = pos_list
+    self.position = choice(self.spawn_locations)
+
+    self.enemy = Enemy()
+    self.enemy.position = self.position
+    self.scene.add_sprite('Enemies', self.enemy)
