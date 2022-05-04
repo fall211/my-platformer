@@ -21,6 +21,7 @@ class PlatformerRPG(arcade.Window):
         self.left_clicked = False
         self.tile_map = None
         self.current_level = 1
+        self.enemy = None
 
 
     def setup(self):
@@ -61,14 +62,11 @@ class PlatformerRPG(arcade.Window):
         )
         self.physics_engine.enable_multi_jump(5)
 
-        # Enemy temp
-        self.enemy = Enemy()
-        self.enemy.position = (2250,630)
-        self.scene.add_sprite('Enemies', self.enemy)
+        # Enemy 
+        self.enemy_list = self.scene.get_sprite_list('Enemies')
+        self.enemy_respawn_timer = 0
 
-        self.enemy_physics_engine = arcade.PhysicsEnginePlatformer(
-            self.enemy, gravity_constant=GRAVITY, walls=self.scene['Ground']
-        )
+
 
         self.camera = arcade.Camera(self.width, self.height)
         self.gui_camera = arcade.Camera(self.width, self.height)
@@ -116,6 +114,7 @@ class PlatformerRPG(arcade.Window):
         if button == arcade.MOUSE_BUTTON_LEFT: 
             self.left_clicked = True
 
+
     def on_update(self, delta_time):
 
         # Player update stuff
@@ -126,9 +125,28 @@ class PlatformerRPG(arcade.Window):
 
 
         # Enemy update stuff
-        self.enemy.pursue_target(self.player, self.enemy_physics_engine)
-        self.scene.update_animation(delta_time,['Enemies'])
-        self.enemy_physics_engine.update()
+        self.enemy_list = self.enemy_list
+
+        if len(self.enemy_list) >= 1:
+            self.scene.update_animation(delta_time,['Enemies'])
+            for enemy in self.enemy_list:
+                self.enemy_physics_engine = arcade.PhysicsEnginePlatformer(
+                    enemy, gravity_constant=GRAVITY, walls=self.scene['Ground']
+                )
+            for enemy in self.enemy_list:
+                self.enemy.pursue_target(self.player, self.enemy_physics_engine)
+                self.enemy_physics_engine.update()
+                if enemy.collides_with_list(self.scene['RangedAttack']):
+                    enemy.health -= RANGED_ATTACK_DAMAGE
+                if enemy.health <= 0:
+                    enemy.kill()
+                    self.player_exp += 1
+
+        else:
+            if self.enemy_respawn_timer <= 0:
+                spawn_enemy(self, self.level_data['enemy_spawner_pos'])
+                self.enemy_respawn_timer = choice(range(60,300))
+            else: self.enemy_respawn_timer -= 1
 
 
         # Attack update stuff
@@ -139,9 +157,12 @@ class PlatformerRPG(arcade.Window):
             laser.center_x += laser.vector_x * RANGED_ATTACK_SPEED
             laser.center_y += laser.vector_y * RANGED_ATTACK_SPEED
             laser.lifespan -= 1
-            if laser.lifespan == 0 or laser.collides_with_list(self.scene['Ground']):
-                laser.remove_from_sprite_lists()
+            if laser.collides_with_list(self.scene['Ground']):
+                laser.kill()
+            elif laser.lifespan == 0:
+                laser.kill()
 
+        print(self.player.position)
         
 
 
