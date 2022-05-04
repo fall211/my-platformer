@@ -1,20 +1,26 @@
 
 
 
-# technical
+# Technical
 WIDTH = 1280
 HEIGHT = 720
 WINDOW_TITLE = 'fall\'s Epic Platformer'
 
-# map
+# Map
 TILE_SIZE = 128
 
 
-# player
+# Player
 PLAYER_SPEED = 10
 PLAYER_JUMP = 25
 RANGED_ATTACK_SPEED = 50
 
+# Enemy
+ENEMY_SPEED = 5
+ENEMY_JUMP = 15
+ENEMY_PROVOKE_DIST = 250
+ENEMY_ATTEMPT_JUMP_DIST = 400
+ENEMY_LOSE_PROVOKE_DIST = 1500
 
-# world
+# World
 GRAVITY = 1
