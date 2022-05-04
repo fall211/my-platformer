@@ -10,7 +10,7 @@ class Enemy(Entity):
         super().__init__(image_folder,image_name, jump)
 
         self.jump_anim_enabled = jump
-
+        self.health = ENEMY_HEALTH
         self.provoked = False
 
     def update_animation(self, delta_time: float = 1/60):
@@ -55,4 +55,3 @@ class Enemy(Entity):
                 self.target.change_y > 0):
 
             self.change_y = ENEMY_JUMP
-
