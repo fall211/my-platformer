@@ -3,9 +3,11 @@
 
 
 level_1 = {
-    'player_spawn_pos': (830,960),
+    'player_spawn_pos': (830, 960),
+    'enemy_spawner_pos': [(2250, 630), (1000, 350)],
 }
 
 level_2 = {
-    'player_spawn_pos': (420,970)
+    'player_spawn_pos': (420, 970),
+    'enemy_spawner_pos': [(420, 420)],
 }
