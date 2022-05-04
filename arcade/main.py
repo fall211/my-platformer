@@ -4,7 +4,6 @@ from settings import *
 from scripts import *
 from leveldata import *
 from player import Player
-from entity import Entity
 from enemy import Enemy
 
 with open('arcade/playerdata.json', 'r') as import_data:
@@ -25,9 +24,6 @@ class PlatformerRPG(arcade.Window):
 
 
     def setup(self):
-        """Set up the game here. Call this function to restart the game."""
-
-
 
         map_file = f'maps/map_{self.current_level}.tmj'
         layer_options = {
@@ -91,7 +87,6 @@ class PlatformerRPG(arcade.Window):
         arcade.draw_text(self.gui_text, 20, 660, arcade.color.ROMAN_SILVER, 40)
 
 
-
     def on_key_press(self,key,modifiers):
         if key == arcade.key.W or key == arcade.key.SPACE:
             if self.physics_engine.can_jump():
@@ -148,7 +143,6 @@ class PlatformerRPG(arcade.Window):
                 laser.remove_from_sprite_lists()
 
         
-
 
 
 
