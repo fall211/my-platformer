@@ -186,3 +186,40 @@ if __name__ == '__main__':
 
 
 
+# TODO:
+# 
+# ----now----
+# 
+# enemy: 
+# - i-frames
+# - some death/spawn effect (particles?)
+# 
+# player:
+# - level up system
+# - player health
+# - player i-frames
+# 
+# 
+# ----later on----
+# 
+# - esc menu with save game option (reassign key.P to the menu)
+# - GUI improvements
+# - inventory system
+# - items, enemy drops, etc
+# - different attacks... rework the laser
+# - better system for moving from one map to the next (and back)
+# - more maps
+# - more enemies
+# 
+# 
+# ----long term----
+# 
+# - crafting
+# - armor
+# - player customization
+# - custom map that the player can edit and place stuff in
+# 
+# 
+# ----polishment/art----
+# 
+# - custom art
