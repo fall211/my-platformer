@@ -136,11 +136,15 @@ class PlatformerRPG(arcade.Window):
             for enemy in self.enemy_list:
                 self.enemy.pursue_target(self.player, self.enemy_physics_engine)
                 self.enemy_physics_engine.update()
+                self.enemy.on_update(delta_time)
                 if enemy.collides_with_list(self.scene['RangedAttack']):
-                    enemy.health -= RANGED_ATTACK_DAMAGE
+                    if not enemy.is_immune:
+                        enemy.health -= RANGED_ATTACK_DAMAGE
+                        enemy.iframes = ENEMY_IMMUNITY_TIME
                 if enemy.health <= 0:
                     enemy.kill()
                     self.player_exp += 1
+                    enemy.is_dead = True
 
         else:
             if self.enemy_respawn_timer <= 0:
@@ -162,7 +166,7 @@ class PlatformerRPG(arcade.Window):
             elif laser.lifespan == 0:
                 laser.kill()
 
-        print(self.player.position)
+        # print(self.player.position)
         
 
 
@@ -191,13 +195,14 @@ if __name__ == '__main__':
 # ----now----
 # 
 # enemy: 
-# - i-frames
+# - damage components
+# - enemy hit effects
 # - some death/spawn effect (particles?)
 # 
 # player:
 # - level up system
 # - player health
-# - player i-frames
+# - death/revive system
 # 
 # 
 # ----later on----
@@ -207,6 +212,7 @@ if __name__ == '__main__':
 # - inventory system
 # - items, enemy drops, etc
 # - different attacks... rework the laser
+# - level up perks
 # - better system for moving from one map to the next (and back)
 # - more maps
 # - more enemies
@@ -216,6 +222,7 @@ if __name__ == '__main__':
 # 
 # - crafting
 # - armor
+# - quests/storyline
 # - player customization
 # - custom map that the player can edit and place stuff in
 # 
