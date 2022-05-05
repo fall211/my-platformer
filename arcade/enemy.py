@@ -11,7 +11,9 @@ class Enemy(Entity):
 
         self.jump_anim_enabled = jump
         self.health = ENEMY_HEALTH
-        self.provoked = False
+        self.is_dead = False
+        self.is_provoked = False
+
 
     def update_animation(self, delta_time: float = 1/60):
         
@@ -35,11 +37,11 @@ class Enemy(Entity):
         y_distance = (self.center_y - self.target.center_y)
 
         if distance < ENEMY_PROVOKE_DIST:
-            self.provoked = True
+            self.is_provoked = True
         if distance > ENEMY_LOSE_PROVOKE_DIST:
-            self.provoked = False
+            self.is_provoked = False
 
-        if self.provoked and distance > 50:
+        if self.is_provoked and distance > 50:
             if self.center_x > self.target.center_x and self.physics_engine.can_jump():
                 self.change_x = -ENEMY_SPEED
             elif self.center_x < self.target.center_x and self.physics_engine.can_jump():
@@ -49,7 +51,7 @@ class Enemy(Entity):
         else: self.change_x = 0
 
         if (self.physics_engine.can_jump() and
-                self.provoked and 
+                self.is_provoked and 
                 y_distance < ENEMY_ATTEMPT_JUMP_DIST and 
                 distance < ENEMY_ATTEMPT_JUMP_DIST and
                 self.target.change_y > 0):
