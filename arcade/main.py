@@ -22,10 +22,12 @@ class PlatformerRPG(arcade.Window):
         self.tile_map = None
         self.current_level = 1
         self.enemy = None
+        self.just_setup = False
 
 
     def setup(self):
 
+        self.just_setup = True
         map_file = f'maps/map_{self.current_level}.tmj'
         layer_options = {
             'Ground': {
@@ -86,6 +88,7 @@ class PlatformerRPG(arcade.Window):
 
 
     def on_key_press(self,key,modifiers):
+        self.just_setup = False
         if key == arcade.key.W or key == arcade.key.SPACE:
             if self.physics_engine.can_jump():
                 self.player.change_y = PLAYER_JUMP
@@ -98,14 +101,15 @@ class PlatformerRPG(arcade.Window):
             save_game()
 
     def on_key_release(self,key,modifiers):
-        if key == arcade.key.D:
+        if key == arcade.key.D and not self.just_setup:
             self.player.change_x -= PLAYER_SPEED
-        elif key == arcade.key.A:
+        elif key == arcade.key.A and not self.just_setup:
             self.player.change_x += PLAYER_SPEED
         
         elif key == arcade.key.S and self.player.collides_with_list(self.scene['Doors']):
             if self.current_level == 1: self.current_level = 2
             else: self.current_level = 1
+            save_game()
             self.setup()
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -125,7 +129,7 @@ class PlatformerRPG(arcade.Window):
 
 
         # Enemy update stuff
-        self.enemy_list = self.enemy_list
+        self.enemy_list = self.scene.get_sprite_list('Enemies')
 
         if len(self.enemy_list) >= 1:
             self.scene.update_animation(delta_time,['Enemies'])
@@ -133,20 +137,20 @@ class PlatformerRPG(arcade.Window):
                 self.enemy_physics_engine = arcade.PhysicsEnginePlatformer(
                     enemy, gravity_constant=GRAVITY, walls=self.scene['Ground']
                 )
-            for enemy in self.enemy_list:
-                self.enemy.pursue_target(self.player, self.enemy_physics_engine)
+                enemy.pursue_target(self.player, self.enemy_physics_engine)
                 self.enemy_physics_engine.update()
-                self.enemy.on_update(delta_time)
+                enemy.on_update(delta_time)
                 if enemy.collides_with_list(self.scene['RangedAttack']):
                     if not enemy.is_immune:
                         enemy.health -= RANGED_ATTACK_DAMAGE
                         enemy.iframes = ENEMY_IMMUNITY_TIME
+                        enemy.is_provoked = True
                 if enemy.health <= 0:
                     enemy.kill()
                     self.player_exp += 1
                     enemy.is_dead = True
 
-        else:
+        if len(self.enemy_list) < ENEMY_SPAWN_CAP:
             if self.enemy_respawn_timer <= 0:
                 spawn_enemy(self, self.level_data['enemy_spawner_pos'])
                 self.enemy_respawn_timer = choice(range(60,300))
@@ -171,16 +175,16 @@ class PlatformerRPG(arcade.Window):
 
 
 
-window = PlatformerRPG()
+game = PlatformerRPG()
 
 def main():
     """Main function"""
-    window.setup()
+    game.setup()
     arcade.run()
 
 def save_game():
-    player_data['player_exp'] = window.player_exp
-    player_data['player_level'] = window.player_level
+    player_data['player_exp'] = game.player_exp
+    player_data['player_level'] = game.player_level
     with open('arcade/playerdata.json', 'w') as write_data:
         json.dump(player_data, write_data, indent=4)
         write_data.close()
