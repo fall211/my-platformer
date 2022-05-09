@@ -1,6 +1,7 @@
 import arcade
 from entity import Entity
 from settings import *
+from random import choice
 
 class Enemy(Entity):
     def __init__(self):
@@ -13,6 +14,9 @@ class Enemy(Entity):
         self.health = ENEMY_HEALTH
         self.is_dead = False
         self.is_provoked = False
+        self.idle_distance = ENEMY_IDLE_WALK_DISTANCE
+        self.should_move = True
+        self.direction = choice(['left', 'right'])
 
 
     def update_animation(self, delta_time: float = 1/60):
@@ -27,6 +31,21 @@ class Enemy(Entity):
         if self.current_texture < 7:
             self.current_texture +=0.2
         else: self.current_texture = 0
+
+    def idle_movement(self):
+        if self.idle_distance >= 0 and self.should_move:
+            if self.direction == 'right':
+                self.change_x = ENEMY_SPEED - ENEMY_IDLE_SPEED_REDUCTION
+            elif self.direction == 'left':
+                self.change_x = -ENEMY_SPEED + ENEMY_IDLE_SPEED_REDUCTION
+            self.idle_distance -= 1
+        elif self.idle_distance < 0:
+            self.change_x = 0
+            if self.direction == 'right':
+                self.direction = 'left'
+            else: self.direction = 'right'
+            self.idle_distance = ENEMY_IDLE_WALK_DISTANCE
+            self.should_move = True
 
 
     def pursue_target(self, target, physics_engine):
@@ -48,7 +67,10 @@ class Enemy(Entity):
                 self.change_x = ENEMY_SPEED
             else:
                 pass
-        else: self.change_x = 0
+        else:
+            if not self.is_provoked:
+                self.idle_movement()
+            else: self.change_x = 0
 
         if (self.physics_engine.can_jump() and
                 self.is_provoked and 
