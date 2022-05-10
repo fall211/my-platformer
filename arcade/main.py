@@ -22,7 +22,7 @@ class PlatformerRPG(arcade.Window):
         self.tile_map = None
         self.current_level = 1
         self.enemy = None
-        self.just_setup = False
+        self.just_setup = True
 
 
     def setup(self):
@@ -111,6 +111,9 @@ class PlatformerRPG(arcade.Window):
             else: self.current_level = 1
             save_game()
             self.setup()
+        
+        elif key == arcade.key.L:
+            print(self.player.position)
 
     def on_mouse_press(self, x, y, button, modifiers):
         self.mouse_x = x + self.camera.position[0]
@@ -125,12 +128,19 @@ class PlatformerRPG(arcade.Window):
         self.physics_engine.update()
         center_camera_to_target(self,self.player)
         self.scene.update_animation(delta_time,['Player'])
+        self.player.on_update(delta_time)
+        
+        # If you fall off the map then reset, kill player in future
         if self.player.center_y < -1000: self.setup()
 
+        self.enemy_list = self.scene.get_sprite_list('Enemies')
+        if self.player.collides_with_list(self.enemy_list):
+            if not self.player.is_immune:
+                self.player.health -= ENEMY_CONTACT_DAMAGE
+                self.player.iframes = PLAYER_IMMUNITY_TIME
+                print(self.player.health)
 
         # Enemy update stuff
-        self.enemy_list = self.scene.get_sprite_list('Enemies')
-
         if len(self.enemy_list) >= 1:
             self.scene.update_animation(delta_time,['Enemies'])
             for enemy in self.enemy_list:
