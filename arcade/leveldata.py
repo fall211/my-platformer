@@ -9,5 +9,5 @@ level_1 = {
 
 level_2 = {
     'player_spawn_pos': (420, 970),
-    'enemy_spawner_pos': [(420, 420)],
+    'enemy_spawner_pos': [(2510, 350), (1400, 280), (844, 560)],
 }
