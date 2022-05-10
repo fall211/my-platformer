@@ -171,16 +171,17 @@ class PlatformerRPG(arcade.Window):
         if self.left_clicked == True:
             ranged_attack(self)
 
-        for laser in self.scene.get_sprite_list('RangedAttack'):
+        self.ranged_attack_list = self.scene.get_sprite_list('RangedAttack')
+       
+        for laser in self.ranged_attack_list:
             laser.center_x += laser.vector_x * RANGED_ATTACK_SPEED
             laser.center_y += laser.vector_y * RANGED_ATTACK_SPEED
             laser.lifespan -= 1
             if laser.collides_with_list(self.scene['Ground']):
                 laser.kill()
-            elif laser.lifespan == 0:
+            elif laser.lifespan <= 0:
                 laser.kill()
 
-        # print(self.player.position)
         
 
 
