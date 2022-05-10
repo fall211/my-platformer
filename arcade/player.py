@@ -10,6 +10,7 @@ class Player(Entity):
 
         self.x = 0
         self.y = 0
+        self.health = 100
 
     def update_animation(self, delta_time: float = 1/60):
         
