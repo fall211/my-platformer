@@ -133,12 +133,16 @@ class PlatformerRPG(arcade.Window):
         # If you fall off the map then reset, kill player in future
         if self.player.center_y < -1000: self.setup()
 
+        # Player contact with enemies
         self.enemy_list = self.scene.get_sprite_list('Enemies')
         if self.player.collides_with_list(self.enemy_list):
-            if not self.player.is_immune:
-                self.player.health -= ENEMY_CONTACT_DAMAGE
-                self.player.iframes = PLAYER_IMMUNITY_TIME
-                print(self.player.health)
+            self.player_enemy_collision_list = self.player.collides_with_list(self.enemy_list)
+            for enemy in self.player_enemy_collision_list:
+                if not enemy.on_attack_cd:
+                    enemy.attack_cd = PLAYER_IMMUNITY_TIME
+                    self.player.health -= ENEMY_CONTACT_DAMAGE
+                    enemy.on_attack_cd = True
+            print(self.player.health)
 
         # Enemy update stuff
         if len(self.enemy_list) >= 1:

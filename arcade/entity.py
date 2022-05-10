@@ -22,15 +22,3 @@ class Entity(arcade.Sprite):
         self.texture = arcade.load_texture(f'{image_path}_1.png')
         self.set_hit_box(self.texture.hit_box_points)
 
-        self.is_immune = False
-        self.iframes = 0
-
-    def on_update(self, delta_time: float = 1 / 60):
-        if self.iframes > 0:
-            self.is_immune = True
-            self.iframes -= delta_time
-        else:
-            self.is_immune = False
-            self.iframes = 0
-
-        return super().on_update(delta_time)

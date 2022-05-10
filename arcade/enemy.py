@@ -18,6 +18,33 @@ class Enemy(Entity):
         self.should_move = True
         self.direction = choice(['left', 'right'])
 
+        self.is_immune = False
+        self.iframes = 0
+
+        self.on_attack_cd = False
+        self.attack_cd = 0
+
+
+    def on_update(self, delta_time: float = 1 / 60):
+
+        # I-frames for being attacked
+        if self.iframes > 0:
+            self.is_immune = True
+            self.iframes -= delta_time
+        else:
+            self.is_immune = False
+            self.iframes = 0
+        
+        # I-frames for attacking player
+        if self.attack_cd > 0:
+            self.on_attack_cd = True
+            self.attack_cd -= delta_time
+        else:
+            self.on_attack_cd = False
+            self.attack_cd = 0
+
+        return super().on_update(delta_time)
+
 
     def update_animation(self, delta_time: float = 1/60):
         
