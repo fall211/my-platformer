@@ -38,3 +38,8 @@ def spawn_enemy(self, pos_list):
     self.enemy = Enemy()
     self.enemy.position = self.position
     self.scene.add_sprite('Enemies', self.enemy)
+
+def revive_player(self):
+    self.setup()
+    self.player.health = PLAYER_HEALTH
+    self.player.is_alive = True
