@@ -11,7 +11,7 @@ class Enemy(Entity):
         super().__init__(image_folder,image_name, jump)
 
         self.jump_anim_enabled = jump
-        self.health = ENEMY_HEALTH
+        self._health = ENEMY_HEALTH
         self.is_dead = False
         self.is_provoked = False
         self.idle_distance = ENEMY_IDLE_WALK_DISTANCE
@@ -24,6 +24,12 @@ class Enemy(Entity):
         self.on_attack_cd = False
         self.attack_cd = 0
 
+    @property
+    def health(self):
+        return self._health
+    @health.setter
+    def health(self, value):
+        self._health = value
 
     def on_update(self, delta_time: float = 1 / 60):
 

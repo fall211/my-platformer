@@ -11,16 +11,23 @@ class Player(Entity):
         self.x = 0
         self.y = 0
         self.is_alive = True
-        self.health = PLAYER_HEALTH
+        self._health = PLAYER_HEALTH
         self.equipped_weapon = 'melee'
 
-    def on_update(self, delta_time: float = 1 / 60):
-
-        # Check if the player is dead
+    @property
+    def health(self):
+        return self._health
+    @health.setter
+    def health(self, value):
+        self._health = value
         if self.health > 0:
             self.is_alive = True
         else:
             self.is_alive = False
+
+    def on_update(self, delta_time: float = 1 / 60):
+        pass
+        # Nothing to update right now.
 
         return super().on_update(delta_time)
 
