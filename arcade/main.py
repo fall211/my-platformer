@@ -1,13 +1,16 @@
+# Module imports
 import arcade
 import arcade.gui
-from arcade.gui import UIManager
 import json
+
+# File imports
 from settings import *
 from scripts import *
 from leveldata import *
 from player import Player
 from enemy import Enemy
 from userinterface import *
+from weapons import *
 
 with open('arcade/playerdata.json', 'r') as import_data:
     player_data = json.load(import_data)
@@ -20,7 +23,7 @@ class PlatformerRPG(arcade.Window):
         super().__init__(WIDTH, HEIGHT, WINDOW_TITLE)
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
-        self.ui_manager = UIManager()
+        self.ui_manager = arcade.gui.UIManager()
 
         self.player = None
         self.left_clicked = False
@@ -50,7 +53,7 @@ class PlatformerRPG(arcade.Window):
 
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
         self.scene.add_sprite_list('Player')
-        self.scene.add_sprite_list('RangedAttack')
+        self.scene.add_sprite_list('Attack')
         self.scene.add_sprite_list('Enemies')
 
         if self.current_level == 1: self.level_data = level_1
@@ -62,7 +65,7 @@ class PlatformerRPG(arcade.Window):
         self.respawn_button = RespawnButton(self)
 
 
-        self.ui_manager.enable()
+        # self.ui_manager.enable()
         self.ui_manager.add(self.respawn_button)
 
 
@@ -108,6 +111,7 @@ class PlatformerRPG(arcade.Window):
             arcade.draw_text(self.player_health_text, 20, 660, arcade.color.RASPBERRY_GLACE, 40)
 
         else:
+            self.ui_manager.enable()
             self.death_scene.draw()
             arcade.draw_text('you died', WIDTH/3, HEIGHT/2, arcade.color.RASPBERRY_GLACE, 70)
             self.ui_manager.draw()
@@ -185,7 +189,7 @@ class PlatformerRPG(arcade.Window):
                     enemy.pursue_target(self.player, self.enemy_physics_engine)
                     self.enemy_physics_engine.update()
                     enemy.on_update(delta_time)
-                    if enemy.collides_with_list(self.scene['RangedAttack']):
+                    if enemy.collides_with_list(self.scene['Attack']):
                         if not enemy.is_immune:
                             enemy.health -= RANGED_ATTACK_DAMAGE
                             enemy.iframes = ENEMY_IMMUNITY_TIME
@@ -203,19 +207,26 @@ class PlatformerRPG(arcade.Window):
 
 
             # Attack update stuff
-            if self.left_clicked == True:
-                ranged_attack(self)
+            laser = LaserAttack()
+            melee = MeleeAttack()
 
-            self.ranged_attack_list = self.scene.get_sprite_list('RangedAttack')
-        
-            for laser in self.ranged_attack_list:
-                laser.center_x += laser.vector_x * RANGED_ATTACK_SPEED
-                laser.center_y += laser.vector_y * RANGED_ATTACK_SPEED
-                laser.lifespan -= 1
-                if laser.collides_with_list(self.scene['Ground']):
-                    laser.kill()
-                elif laser.lifespan <= 0:
-                    laser.kill()
+
+            self.attack_list = self.scene.get_sprite_list('Attack')
+            self.ground_list = self.scene.get_sprite_list('Ground')
+
+
+            if self.player.equipped_weapon == 'laser':
+                if self.left_clicked: 
+                    laser.ranged_attack(self)
+                laser.on_update(self,self.attack_list, self.ground_list)
+            elif self.player.equipped_weapon == 'melee':
+                if self.left_clicked:
+                    self.attack_list.clear()
+                    melee.melee_attack(self)
+                melee.on_update(self, self.attack_list)
+
+
+
         else:
             pass
         
