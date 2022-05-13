@@ -8,7 +8,6 @@ from settings import *
 from scripts import *
 from leveldata import *
 from player import Player
-from enemy import Enemy
 from userinterface import *
 from weapons import *
 
@@ -175,7 +174,6 @@ class PlatformerRPG(arcade.Window):
                         enemy.attack_cd = PLAYER_IMMUNITY_TIME
                         self.player.health -= ENEMY_CONTACT_DAMAGE
                         enemy.on_attack_cd = True
-                print(self.player.health)
             if self.player.health <= 0:
                 self.player.health = 0
 
@@ -210,10 +208,8 @@ class PlatformerRPG(arcade.Window):
             laser = LaserAttack()
             melee = MeleeAttack()
 
-
             self.attack_list = self.scene.get_sprite_list('Attack')
             self.ground_list = self.scene.get_sprite_list('Ground')
-
 
             if self.player.equipped_weapon == 'laser':
                 if self.left_clicked: 
