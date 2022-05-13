@@ -12,6 +12,7 @@ class Player(Entity):
         self.y = 0
         self.is_alive = True
         self.health = PLAYER_HEALTH
+        self.equipped_weapon = 'melee'
 
     def on_update(self, delta_time: float = 1 / 60):
 
