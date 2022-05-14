@@ -18,7 +18,7 @@ import_data.close()
 class PlatformerRPG(arcade.Window):
     def __init__(self):
 
-        # call the parent class and set up the window
+        # Call the parent class and set up the window
         super().__init__(WIDTH, HEIGHT, WINDOW_TITLE)
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
@@ -63,8 +63,6 @@ class PlatformerRPG(arcade.Window):
         self.death_scene = arcade.Scene()
         self.respawn_button = RespawnButton(self)
 
-
-        # self.ui_manager.enable()
         self.ui_manager.add(self.respawn_button)
 
 
@@ -170,8 +168,7 @@ class PlatformerRPG(arcade.Window):
             if self.player.collides_with_list(self.enemy_list):
                 self.player_enemy_collision_list = self.player.collides_with_list(self.enemy_list)
                 for enemy in self.player_enemy_collision_list:
-                    if not enemy.on_attack_cd:
-                        enemy.attack_cd = PLAYER_IMMUNITY_TIME
+                    if not enemy.on_attack_cd and not self.player.is_immune:
                         self.player.health -= ENEMY_CONTACT_DAMAGE
                         enemy.on_attack_cd = True
             if self.player.health <= 0:
@@ -214,7 +211,7 @@ class PlatformerRPG(arcade.Window):
             if self.player.equipped_weapon == 'laser':
                 if self.left_clicked: 
                     laser.ranged_attack(self)
-                laser.on_update(self,self.attack_list, self.ground_list)
+                laser.on_update(self.attack_list, self.ground_list)
             elif self.player.equipped_weapon == 'melee':
                 if self.left_clicked:
                     self.attack_list.clear()
