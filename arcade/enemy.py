@@ -12,16 +12,16 @@ class Enemy(Entity):
 
         self.jump_anim_enabled = jump
         self._health = ENEMY_HEALTH
-        self.is_dead = False
-        self.is_provoked = False
+        self._is_dead = False
+        self._is_provoked = False
         self.idle_distance = ENEMY_IDLE_WALK_DISTANCE
         self.should_move = True
         self.direction = choice(['left', 'right'])
 
-        self.is_immune = False
+        self._is_immune = False
         self.iframes = 0
 
-        self.on_attack_cd = False
+        self._on_attack_cd = False
         self.attack_cd = 0
 
     @property
@@ -30,24 +30,57 @@ class Enemy(Entity):
     @health.setter
     def health(self, value):
         self._health = value
+        self.is_immune = True
+
+    @property
+    def is_dead(self):
+        return self._is_dead
+    @is_dead.setter
+    def is_dead(self, bool):
+        self._is_dead = bool
+
+    @property
+    def is_provoked(self):
+        return self._is_provoked
+    @is_provoked.setter
+    def is_provoked(self, bool):
+        self._is_provoked = bool
+
+    @property
+    def on_attack_cd(self):
+        return self._on_attack_cd
+    @on_attack_cd.setter
+    def on_attack_cd(self, bool):
+        self._on_attack_cd = bool
+        if self._on_attack_cd == True:
+            self.attack_cd = ENEMY_ATTACK_SPEED
+
+    # Immunity property
+    @property
+    def is_immune(self):
+        return self._is_immune
+    @is_immune.setter
+    def is_immune(self, bool):
+        self._is_immune = bool
+        if self._is_immune == True:
+            self.alpha = 90
+            self.iframes = ENEMY_IMMUNITY_TIME
+        else: self.alpha = 255
+
+
 
     def on_update(self, delta_time: float = 1 / 60):
 
         # I-frames for being attacked
-        if self.iframes > 0:
-            self.is_immune = True
-            self.iframes -= delta_time
-        else:
+        self.iframes -= delta_time
+        if self.iframes <= 0:
             self.is_immune = False
-            self.iframes = 0
         
-        # I-frames for attacking player
-        if self.attack_cd > 0:
-            self.on_attack_cd = True
-            self.attack_cd -= delta_time
-        else:
+        # Attack CD for attacking player
+        self.attack_cd -= delta_time
+        if self.attack_cd <= 0:
             self.on_attack_cd = False
-            self.attack_cd = 0
+
 
         return super().on_update(delta_time)
 
