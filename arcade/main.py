@@ -251,12 +251,10 @@ if __name__ == '__main__':
 # ----now----
 # 
 # enemy: 
-# - enemy hit effects
 # - some death/spawn effect (particles?)
 # 
 # player:
 # - level up system
-# - death/revive system
 # 
 # 
 # ----later on----
