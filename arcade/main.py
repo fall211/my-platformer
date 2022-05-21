@@ -72,8 +72,8 @@ class PlatformerRPG(arcade.Window):
         self.scene.add_sprite('Player', self.player)
 
         # Player stats    
-        self.player_exp = player_data['player_exp']
-        self.player_level = player_data['player_level']
+        self.player.exp = player_data['player_exp']
+        self.player.level = player_data['player_level']
         self.player.health = player_data['player_health']
 
         # Player physics engine
@@ -102,9 +102,12 @@ class PlatformerRPG(arcade.Window):
 
             self.gui_camera.use()
             # Anything after here will be on the GUI
-            self.player_exp_text = f'Exp: {self.player_exp}'
+            self.player_exp_text = f'Exp: {self.player.exp}'
+            self.player_level_text = f'Level: {self.player.level}'
             self.player_health_text = f'Health: {self.player.health}'
             arcade.draw_text(self.player_exp_text, 20, 615, arcade.color.ROMAN_SILVER, 25)
+            arcade.draw_text(self.player_level_text, 20, 585, arcade.color.ROMAN_SILVER, 25)
+
             arcade.draw_text(self.player_health_text, 20, 660, arcade.color.RASPBERRY_GLACE, 40)
 
         else:
@@ -191,7 +194,7 @@ class PlatformerRPG(arcade.Window):
                             enemy.is_provoked = True
                     if enemy.health <= 0:
                         enemy.kill()
-                        self.player_exp += 1
+                        self.player.exp += 1
                         enemy.is_dead = True
 
             if len(self.enemy_list) < ENEMY_SPAWN_CAP:
@@ -234,8 +237,8 @@ def main():
     arcade.run()
 
 def save_game():
-    player_data['player_exp'] = game.player_exp
-    player_data['player_level'] = game.player_level
+    player_data['player_exp'] = game.player.exp
+    player_data['player_level'] = game.player.level
     player_data['player_health'] = game.player.health
     with open('arcade/playerdata.json', 'w') as write_data:
         json.dump(player_data, write_data, indent=4)

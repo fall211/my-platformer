@@ -15,6 +15,10 @@ class Player(Entity):
         self.equipped_weapon = 'laser'
         self._is_immune = False
         self.iframes = PLAYER_IMMUNITY_TIME
+        self.level_up_treshhold = 0
+
+        self._exp = 0
+        self._level = 1
 
     # Health property
     @property
@@ -48,6 +52,25 @@ class Player(Entity):
     @is_alive.setter
     def is_alive(self, bool):
         self._is_alive = bool
+
+    # EXP property
+    @property
+    def exp(self):
+        return self._exp
+    @exp.setter
+    def exp(self, value):
+        self._exp = value
+        if self._exp >= self.level_up_treshhold:
+            self.level += 1
+
+    # Level property
+    @property
+    def level(self):
+        return self._level
+    @level.setter
+    def level(self, value):
+        self._level = value
+        self.level_up_treshhold = self._level ** 2
 
 
     def on_update(self, delta_time: float = 1 / 60):
